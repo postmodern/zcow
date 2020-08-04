@@ -1,0 +1,11 @@
+[Unit]
+Description=zram COW snapshot for %I
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/zcow create %I
+RemainAfterExit=true
+ExecStop=/usr/local/sbin/zcow destroy %I
+
+[Install]
+WantedBy=multi-user.target

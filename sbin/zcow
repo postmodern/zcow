@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+program="${0##*/}"
+source "${0%/*}/../share/zcow/zcow.sh"
+
+function print_version() { echo "$program $zcow_version"; }
+
+function usage()
+{
+	cat <<EOF
+Usage:
+
+$program
+	[--version] [--help]
+
+	list
+	create DEVICE [NAME]
+	info NAME
+	destroy NAME
+	version
+	help
+EOF
+}
+
+function parse_options()
+{
+	case "$1" in
+		list|"")	zcow_list ;;
+		create)
+			local device="$2"
+
+			if [[ -z "$device" ]]; then
+				fail "create: DEVICE argument is missing"
+			fi
+
+			local name="${3-${device##*/}}"
+
+			zcow_create "$device" "$name" || return $?
+			;;
+		info)
+			local name="$2"
+
+			if [[ -z "$name" ]]; then
+				fail "missing NAME argument"
+			fi
+
+			zcow_info "$name" || return $?
+			;;
+		destroy)
+			local name="$2"
+
+			if [[ -z "$name" ]]; then
+				fail "missing NAME argument"
+			fi
+
+			zcow_remove "$name" || return $?
+			;;
+		--version|-V|version)	print_version ;;
+		--help|-h|help)		usage ;;
+		*)
+			usage
+			return -1
+			;;
+	esac
+}
+
+parse_options "$@" || exit $?
