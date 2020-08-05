@@ -27,10 +27,17 @@ Create a zcow device for `/dev/sda4`, but with the custom name
 List all zcows:
 
     $ zcow
+    vdc	/dev/vdc	/dev/zram0
+    foo	/dev/vdc	/dev/zram1
 
 Get info about the zcow named `foo`:
 
     $ zcow info foo
+    Origin:	/dev/vdc
+    COW:	/dev/zram1
+    
+    NAME       ALGORITHM DISKSIZE DATA COMPR TOTAL STREAMS MOUNTPOINT
+    /dev/zram1 lzo-rle       100M   0B    0B    0B       8 
 
 Remove the zcow named `foo`:
 
